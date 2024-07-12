@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Assinaturas de E-mail</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo-placeholder"><img src="./Assets/Logo-Vermelho.png" alt=""></div>
+        <h1>Gerador de Assinaturas de E-mail</h1>
+        <form id="signatureForm">
+            <input type="text" id="name" name="name" placeholder="Seu nome" required>
+
+            <input type="text" id="position" name="position" placeholder="Sua função" required>
+
+            <div id="incluirWhatsapp" class="checkform">
+                <label for="whatsapp">Incluir WhatsApp?</label>
+                <input type="checkbox" id="checkboxWhatsapp" name="whatsapp">
+            </div>
+
+            <label for="phone" id="phoneLabel" style="display: none;">Número de WhatsApp:</label>
+            <input type="text" id="phone" name="phone" style="display: none;">
+
+            <label for="photo">Carregar foto:</label>
+            <input type="file" id="photo" name="photo">
+            <p>*Selecione uma foto quadrada do seu computador.</p>
+
+            <div class="checkform">
+                <input type="checkbox" id="checkboxPhoto" name="noPhoto">
+                <label for="checkboxPhoto">ou, siga sem foto.</label>
+            </div>
+            
+            <button id="summitButton" type="button" onclick="generateSignature()">Gerar Assinatura</button>
+        </form>
+    </div>
+
+    <div id="signaturePreview">
+        <div>
+            <table class="assinatura">
+                <tr>
+                    <td id="photoCell"><img id="avatar" src="./Assets/Avatar-placeholder.png" alt="Foto do Avatar"></td>
+                    <td class="space"></td>
+                    <td>
+                        <p id="previewName">Seu nome completo aqui</p>
+                        <p id="previewPosition">Seu cargo</p>
+                        <p id="previewPhone">Seu número de Whatsapp</p>
+                        <p id="previewWebsite">www.agenciafg.com.br</p>
+                        <div id="socialIcons">
+                            <a target="_blank" href="https://www.instagram.com/agenciafg/" id="instagramLink"><img
+                                    src="https://i.ibb.co/kSL4RZQ/IC-Instagram.png" alt="Instagram"></a>
+                            <a target="_blank"
+                                href="https://www.linkedin.com/company/ag-ncia-fg-marketing-digital-full-service/"
+                                id="linkedinLink"><img src="https://i.ibb.co/tZ8WR2P/IC-Linkedin.png" alt="LinkedIn"></a>
+                            <a target="_blank" href="https://www.youtube.com/channel/UCpXV4DE7gv0csA9ePegcCfw"
+                                id="youtubeLink"><img src="https://i.ibb.co/drTQDWq/IC-Youtube.png" alt="YouTube"></a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div id="banner">
+                <a target="_blank" href="https://agenciafg.com.br/"><img id="bannerImg"
+                        src="https://i.ibb.co/vvRRs3y/Assinatura-E-Mail-2024-Faixa-v3.jpg" alt="Banner"></a>
+            </div>
+
+        </div>
+
+        <button id="copyButton" onclick="copySignature()">
+            Copiar Assinatura <i class="far fa-copy" style="margin-left: 5px;"></i>
+        </button>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
