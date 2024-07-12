@@ -74,6 +74,11 @@ input {
     margin: 5px 0;
 }
 
+.infos{
+    margin-top: 0px ;
+    line-height: 1rem;
+}
+
 #signaturePreview {
     display: flex;
     flex-direction: column;

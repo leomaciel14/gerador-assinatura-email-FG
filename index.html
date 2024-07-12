@@ -26,14 +26,21 @@
             <label for="phone" id="phoneLabel" style="display: none;">Número de WhatsApp:</label>
             <input type="text" id="phone" name="phone" style="display: none;">
 
-            <label for="photo">Carregar foto:</label>
+            <label for="photo">Carregar foto do computador:</label>
             <input type="file" id="photo" name="photo">
-            <p>*Selecione uma foto quadrada do seu computador.</p>
+            <p class="infos">*Selecione uma foto quadrada do seu computador.</p>
+            
+            <!-- Novo campo para link do Slack -->
+            <label for="slackImageUrl">Ou link da imagem do Slack:</label>
+            <input type="text" id="slackImageUrl" name="slackImageUrl" placeholder="URL da imagem no Slack">
+            <p class="infos">*Acesse seu perfil no Slack, clique com o segundo botão do mouse na sua foto e "Copiar URL da Imagem".</p>
+            
 
             <div class="checkform">
                 <input type="checkbox" id="checkboxPhoto" name="noPhoto">
                 <label for="checkboxPhoto">ou, siga sem foto.</label>
             </div>
+
             
             <button id="summitButton" type="button" onclick="generateSignature()">Gerar Assinatura</button>
         </form>
@@ -43,8 +50,8 @@
         <div>
             <table class="assinatura">
                 <tr>
-                    <td id="photoCell"><img id="avatar" src="./Assets/Avatar-placeholder.png" alt="Foto do Avatar"></td>
-                    <td class="space"></td>
+                        <td id="photoCell"><img id="avatar" src="./Assets/Avatar-placeholder.png" alt="Foto do Avatar"></td>
+                        <td class="space"></td>
                     <td>
                         <p id="previewName">Seu nome completo aqui</p>
                         <p id="previewPosition">Seu cargo</p>
