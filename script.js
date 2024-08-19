@@ -41,7 +41,7 @@ function generateSignature() {
             // Processar e carregar a imagem do arquivo local
             processImage(photoFile, function (processedImageDataUrl) {
                 const storageRef = firebase.storage().ref(`imagens/${photoFile.name}`);
-                
+
                 // Converter a imagem processada (data URL) para um arquivo Blob
                 fetch(processedImageDataUrl)
                     .then(res => res.blob())
@@ -78,7 +78,7 @@ function processImage(file, callback) {
     // Defina as dimensões desejadas para a imagem
     const size = 150;  // Largura e altura da imagem
 
-    img.onload = function() {
+    img.onload = function () {
         // Configurando o tamanho do canvas
         canvas.width = size;
         canvas.height = size;
@@ -100,7 +100,7 @@ function processImage(file, callback) {
 
     // Lendo o arquivo como URL
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
@@ -136,12 +136,12 @@ function copySignature() {
 }
 
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID
+    apiKey: window.env.apiKey,
+    authDomain: window.env.authDomain,
+    projectId: window.env.projectId,
+    storageBucket: window.env.storageBucket,
+    messagingSenderId: window.env.messagingSenderId,
+    appId: window.env.appId,
 };
 
 
