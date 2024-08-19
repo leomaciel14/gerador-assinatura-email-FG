@@ -13,6 +13,7 @@
     <div class="container">
         <div class="logo-placeholder"><img src="./Assets/Logo-Vermelho.png" alt=""></div>
         <h1>Gerador de Assinaturas de E-mail</h1>
+        <p>Versão 1.1</p>
         <form id="signatureForm">
             <input type="text" id="name" name="name" placeholder="Seu nome" required>
 
@@ -26,54 +27,80 @@
             <label for="phone" id="phoneLabel" style="display: none;">Número de WhatsApp:</label>
             <input type="text" id="phone" name="phone" style="display: none;">
 
-            <label for="photo">Carregar foto do computador:</label>
+
+            <label for="firebaseImage">Carregar foto do computador:</label>
             <input type="file" id="photo" name="photo">
             <p class="infos">*Selecione uma foto quadrada do seu computador.</p>
-            
+            <canvas id="canvas" style="display:none;"></canvas>
+
             <!-- Novo campo para link do Slack -->
-            <label for="slackImageUrl">Ou link da imagem do Slack:</label>
+            <label for="slackImageUrl">Carregar foto via link da imagem do Slack:</label>
             <input type="text" id="slackImageUrl" name="slackImageUrl" placeholder="URL da imagem no Slack">
-            <p class="infos">*Acesse seu perfil no Slack, clique com o segundo botão do mouse na sua foto e "Copiar URL da Imagem".</p>
-            
+            <p class="infos">*Acesse seu perfil no Slack, clique com o segundo botão do mouse na sua foto e "Copiar URL
+                da Imagem".</p>
+
 
             <div class="checkform">
                 <input type="checkbox" id="checkboxPhoto" name="noPhoto">
                 <label for="checkboxPhoto">ou, siga sem foto.</label>
             </div>
 
-            
+
             <button id="summitButton" type="button" onclick="generateSignature()">Gerar Assinatura</button>
         </form>
     </div>
 
     <div id="signaturePreview">
         <div>
-            <table class="assinatura">
+            <table class="assinatura"
+                style="width: 100%; font-family: Arial, 'IBM Plex Sans', sans-serif; background-color: #ffffff; border-radius: 10px;">
                 <tr>
-                        <td id="photoCell"><img id="avatar" src="./Assets/Avatar-placeholder.png" alt="Foto do Avatar"></td>
-                        <td class="space"></td>
-                    <td>
-                        <p id="previewName">Seu nome completo aqui</p>
-                        <p id="previewPosition">Seu cargo</p>
-                        <p id="previewPhone">Seu número de Whatsapp</p>
-                        <p id="previewWebsite">www.agenciafg.com.br</p>
-                        <div id="socialIcons">
-                            <a target="_blank" href="https://www.instagram.com/agenciafg/" id="instagramLink"><img
-                                    src="https://i.ibb.co/kSL4RZQ/IC-Instagram.png" alt="Instagram"></a>
+                    <td style="vertical-align: top; text-align: left; width: 165px; height: 145px; " id="photoCell">
+                        <img id="avatar" src="./Assets/Avatar-placeholder.png" alt="Foto do Avatar"
+                            style="width: 145px; height: 145px;">
+                    </td>
+                    <td style="vertical-align: left;">
+                        <p id="previewName"
+                            style="font-size: 15pt; font-weight: bold; line-height: 1.3; margin: 5px 0;">Seu nome
+                            completo aqui</p>
+                        <p id="previewPosition"
+                            style="font-size: 10pt; font-weight: bold; line-height: 1.2; margin: 0;">Seu cargo</p>
+                        <p id="previewPhone" style="font-size: 9pt; line-height: 0.8; margin: 5px 0;">Seu número de
+                            Whatsapp</p>
+                        <p id="previewWebsite"
+                            style="font-size: 9pt; line-height: 0.8; margin-bottom: 7px; text-decoration: none;">
+                            <a href="http://www.agenciafg.com.br"
+                                style="text-decoration: none; color: black;">www.agenciafg.com.br</a>
+                        </p>
+                        <p>
+                            <a target="_blank" href="https://www.instagram.com/agenciafg/" id="instagramLink"
+                                style="text-decoration: none;">
+                                <img src="https://i.ibb.co/kSL4RZQ/IC-Instagram.png" alt="Instagram"
+                                    style="width: 24px; height: 24px; padding: 5px;">
+                            </a>
                             <a target="_blank"
                                 href="https://www.linkedin.com/company/ag-ncia-fg-marketing-digital-full-service/"
-                                id="linkedinLink"><img src="https://i.ibb.co/tZ8WR2P/IC-Linkedin.png" alt="LinkedIn"></a>
+                                id="linkedinLink" style="text-decoration: none;">
+                                <img src="https://i.ibb.co/tZ8WR2P/IC-Linkedin.png" alt="LinkedIn"
+                                    style="width: 24px; height: 24px; padding: 5px;">
+                            </a>
                             <a target="_blank" href="https://www.youtube.com/channel/UCpXV4DE7gv0csA9ePegcCfw"
-                                id="youtubeLink"><img src="https://i.ibb.co/drTQDWq/IC-Youtube.png" alt="YouTube"></a>
-                        </div>
+                                id="youtubeLink" style="text-decoration: none;">
+                                <img src="https://i.ibb.co/drTQDWq/IC-Youtube.png" alt="YouTube"
+                                    style="width: 24px; height: 24px; padding: 5px;">
+                            </a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: left; padding-top: 20px;">
+                        <a target="_blank" href="https://agenciafg.com.br/">
+                            <img id="bannerImg" src="https://i.ibb.co/vvRRs3y/Assinatura-E-Mail-2024-Faixa-v3.jpg"
+                                alt="Banner" style="width:542px; height:107px;">
+                        </a>
                     </td>
                 </tr>
             </table>
-            <div id="banner">
-                <a target="_blank" href="https://agenciafg.com.br/"><img id="bannerImg"
-                        src="https://i.ibb.co/vvRRs3y/Assinatura-E-Mail-2024-Faixa-v3.jpg" alt="Banner"></a>
-            </div>
-
         </div>
 
         <button id="copyButton" onclick="copySignature()">
@@ -81,6 +108,9 @@
         </button>
     </div>
 
+    <!-- Adicionar Firebase SDKs (compatível sem módulos) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script src="script.js"></script>
 </body>

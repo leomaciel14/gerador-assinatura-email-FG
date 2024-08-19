@@ -20,84 +20,90 @@ function generateSignature() {
     const slackImageUrl = document.getElementById('slackImageUrl').value.trim();
     const noPhoto = document.getElementById('checkboxPhoto').checked;
 
+    // Atualizar nome e posição
     document.getElementById('previewName').textContent = name;
     document.getElementById('previewPosition').textContent = position;
 
+    // Atualizar telefone
     if (whatsappChecked) {
-        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" target="_blank" href="https://wa.me/+55${phone.replace(/[^0-9]/g, '')}">WhatsApp: ${phone} </a>`;
+        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" target="_blank" style="text-decoration: none;" href="https://wa.me/+55${phone.replace(/[^0-9]/g, '')}">WhatsApp: ${phone} </a>`;
     } else {
-        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" href="tel:${phone.replace(/[^0-9]/g, '')}">${phone}</a> | <a class="whatsapp" href="tel:${phone2.replace(/[^0-9]/g, '')}">${phone2}</a>`;
+        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" style="text-decoration: none; color: black;" href="tel:${phone.replace(/[^0-9]/g, '')}">${phone}</a> | <a class="whatsapp" style="text-decoration: none; color: black;" href="tel:${phone2.replace(/[^0-9]/g, '')}">${phone2}</a>`;
     }
 
+    // Manipulação da foto
     if (noPhoto) {
         document.getElementById('photoCell').style.display = 'none';
     } else {
         document.getElementById('photoCell').style.display = 'table-cell';
+
         if (photoFile) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const imageUrl = e.target.result;
-                const id = 'uniqueID'; // Defina um ID único aqui (ou gere dinamicamente)
-                const fileName = `${id}-${name.replace(/\s/g, '-')}-${position.replace(/\s/g, '-')}.png`;
-                applyFrameToImage(imageUrl, id, name, position); // Chamada corrigida
-            }
-            reader.readAsDataURL(photoFile);
-            showLoadingText();
+            // Processar e carregar a imagem do arquivo local
+            processImage(photoFile, function (processedImageDataUrl) {
+                const storageRef = firebase.storage().ref(`imagens/${photoFile.name}`);
+                
+                // Converter a imagem processada (data URL) para um arquivo Blob
+                fetch(processedImageDataUrl)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        // Fazer o upload do Blob para o Firebase
+                        storageRef.put(blob).then(() => {
+                            // Obter a URL da imagem após o upload
+                            storageRef.getDownloadURL().then((url) => {
+                                document.getElementById('avatar').src = url;
+                                console.log('URL da imagem: ', url);
+                            }).catch((error) => {
+                                console.error("Erro ao obter a URL da imagem:", error);
+                            });
+                        }).catch((error) => {
+                            console.error("Erro ao fazer o upload da imagem:", error);
+                        });
+                    });
+            });
         } else if (slackImageUrl) {
-            // Exibe a imagem do Slack e a moldura
+            // Carregar a imagem do Slack
             document.getElementById('avatar').src = slackImageUrl;
-            document.getElementById('frameOverlay').style.display = 'block'; // Exibe a moldura
+        } else {
+            // Exibir avatar padrão se nenhuma imagem for selecionada
+            document.getElementById('avatar').src = './Assets/Avatar-placeholder.png';
         }
     }
 }
 
-function applyFrameToImage(imageUrl, id, name, position) {
-    const canvas = document.createElement('canvas');
+function processImage(file, callback) {
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const frameImage = new Image();
-    const userImage = new Image();
+    const img = new Image();
 
-    userImage.onload = function () {
-        canvas.width = userImage.width;
-        canvas.height = userImage.height;
-        ctx.drawImage(userImage, 0, 0);
-        frameImage.onload = function () {
-            ctx.drawImage(frameImage, 0, 0, userImage.width, userImage.height);
-            const fileName = `${id}-${name.replace(/\s/g, '-')}-${position.replace(/\s/g, '-')}.png`;
-            const imageDataUrl = canvas.toDataURL('image/png'); // Convertendo para base64 da imagem
-            uploadToImgbb(imageDataUrl, fileName); // Função para enviar para Imgbb
-        }
-        frameImage.src = './Assets/Moldura.png';
-    }
-    userImage.src = imageUrl;
-}
+    // Defina as dimensões desejadas para a imagem
+    const size = 150;  // Largura e altura da imagem
 
+    img.onload = function() {
+        // Configurando o tamanho do canvas
+        canvas.width = size;
+        canvas.height = size;
 
-function uploadToImgbb(imageDataUrl, fileName) {
-    const apiKey = 'efb76f1cd339d2b68d47015b52b5c08d';
-    const uploadUrl = 'https://api.imgbb.com/1/upload';
-    const formData = new FormData();
-    formData.append('key', apiKey);
-    formData.append('image', imageDataUrl.split(',')[1]); // Passando apenas a parte base64 da string
-    formData.append('name', fileName);
+        // Desenhando o círculo de recorte
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.clip();
 
-    fetch(uploadUrl, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Upload successful:', data);
-        displayImageInPreview(data); // Exibir imagem na pré-visualização
-    })
-    .catch(error => {
-        console.error('Upload failed:', error);
-    });
-}
+        // Desenhando a imagem no canvas com o clip aplicado
+        ctx.drawImage(img, 0, 0, size, size);
 
-function displayImageInPreview(data) {
-    const imageUrl = data.data.url;
-    document.getElementById('avatar').src = imageUrl;
+        // Convertendo o canvas para data URL (base64)
+        const dataUrl = canvas.toDataURL('image/png');
+        callback(dataUrl);
+    };
+
+    // Lendo o arquivo como URL
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 }
 
 function copySignature() {
@@ -128,3 +134,15 @@ function copySignature() {
 
     document.body.removeChild(tempElement);
 }
+
+const firebaseConfig = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const storage = firebase.storage();
