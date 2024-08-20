@@ -23,19 +23,19 @@
                 <label for="whatsapp">Incluir WhatsApp?</label>
                 <input type="checkbox" id="checkboxWhatsapp" name="whatsapp">
             </div>
-
+            
             <label for="phone" id="phoneLabel" style="display: none;">Número de WhatsApp:</label>
-            <input type="text" id="phone" name="phone" style="display: none;">
+            <input type="text" id="phone" name="phone" style="display: none;" placeholder="Digite apenas os números: Ex.:51992626012">
 
 
             <label for="firebaseImage">Carregar foto do computador:</label>
             <input type="file" id="photo" name="photo">
-            <p class="infos">*Selecione uma foto quadrada do seu computador.</p>
+            <p class="infos">*Selecione uma <strong> foto quadrada </strong> do seu computador.</p>
             <canvas id="canvas" style="display:none;"></canvas>
 
             <!-- Novo campo para link do Slack -->
             <label for="slackImageUrl">Carregar foto via link da imagem do Slack:</label>
-            <input type="text" id="slackImageUrl" name="slackImageUrl" placeholder="URL da imagem no Slack">
+            <input type="text" id="slackImageUrl" name="slackImageUrl" placeholder="Cole aqui a URL da imagem no Slack">
             <p class="infos">*Acesse seu perfil no Slack, clique com o segundo botão do mouse na sua foto e "Copiar URL
                 da Imagem".</p>
 
@@ -56,8 +56,9 @@
                 style="width: 100%; font-family: Arial, 'IBM Plex Sans', sans-serif; background-color: #ffffff; border-radius: 10px;">
                 <tr>
                     <td style="vertical-align: top; text-align: left; width: 165px; height: 145px; " id="photoCell">
-                        <img id="avatar" src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FAvatar-placeholder.png?alt=media&token=c2b36345-2b3e-40b5-8fea-06b3cd6ed149" alt="Foto do Avatar"
-                            style="width: 145px; height: 145px;">
+                        <img id="avatar"
+                            src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FAvatar-placeholder.png?alt=media&token=c2b36345-2b3e-40b5-8fea-06b3cd6ed149"
+                            alt="Foto do Avatar" style="width: 145px; height: 145px;">
                     </td>
                     <td style="vertical-align: left;">
                         <p id="previewName"
@@ -65,7 +66,9 @@
                             completo aqui</p>
                         <p id="previewPosition"
                             style="font-size: 10pt; font-weight: bold; line-height: 1.2; margin: 0;">Seu cargo</p>
-                        <p id="previewPhone" style="font-size: 9pt; line-height: 0.8; margin: 5px 0; text-decoration: none; color: #000000;">Seu número de
+                        <p id="previewPhone"
+                            style="font-size: 9pt; line-height: 0.8; margin: 5px 0; text-decoration: none; color: #000000;">
+                            Seu número de
                             Whatsapp</p>
                         <p id="previewWebsite"
                             style="font-size: 9pt; line-height: 0.8; margin-bottom: 7px; text-decoration: none;">
@@ -75,19 +78,19 @@
                         <p style="color: #ffffff; text-decoration: none; text-underline-offset: none;">
                             <a target="_blank" href="https://www.instagram.com/agenciafg/" id="instagramLink"
                                 style="text-decoration: none; width: 24px; height: 24px;">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FIC-Instagram.png?alt=media&token=c04d1ac4-95b5-45fe-a575-dbce647df13d" alt="Instagram"
-                                    style="width: 24px; height: 24px; padding: 5px;">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FIC-Instagram.png?alt=media&token=c04d1ac4-95b5-45fe-a575-dbce647df13d"
+                                    alt="Instagram" style="width: 24px; height: 24px; padding: 5px;">
                             </a>
                             <a target="_blank"
                                 href="https://www.linkedin.com/company/ag-ncia-fg-marketing-digital-full-service/"
                                 id="linkedinLink" style="text-decoration: none; width: 24px; height: 24px;">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FIC-Linkedin.png?alt=media&token=a4f7a289-b37d-40b4-b828-2b592b683aed" alt="LinkedIn"
-                                    style="width: 24px; height: 24px; padding: 5px;">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FIC-Linkedin.png?alt=media&token=a4f7a289-b37d-40b4-b828-2b592b683aed"
+                                    alt="LinkedIn" style="width: 24px; height: 24px; padding: 5px;">
                             </a>
                             <a target="_blank" href="https://www.youtube.com/channel/UCpXV4DE7gv0csA9ePegcCfw"
                                 id="youtubeLink" style="text-decoration: none; width: 24px; height: 24px;">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FIC-Youtube.png?alt=media&token=23b1bfef-0464-4a81-8601-86ba0b2d29d7" alt="YouTube"
-                                    style="width: 24px; height: 24px; padding: 5px;">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FIC-Youtube.png?alt=media&token=23b1bfef-0464-4a81-8601-86ba0b2d29d7"
+                                    alt="YouTube" style="width: 24px; height: 24px; padding: 5px;">
                             </a>
                         </p>
                     </td>
@@ -95,7 +98,8 @@
                 <tr>
                     <td colspan="3" style="text-align: left; padding-top: 20px;">
                         <a target="_blank" href="https://agenciafg.com.br/">
-                            <img id="bannerImg" src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FAssinatura-E-Mail-2024-Faixa-v3.jpg?alt=media&token=7ad74fb7-6741-4dc7-8efb-6adc1947ae41"
+                            <img id="bannerImg"
+                                src="https://firebasestorage.googleapis.com/v0/b/fotos-assinatura.appspot.com/o/assets%2FAssinatura-E-Mail-2024-Faixa-v3.jpg?alt=media&token=7ad74fb7-6741-4dc7-8efb-6adc1947ae41"
                                 alt="Banner" style="width:542px; height:107px;">
                         </a>
                     </td>
