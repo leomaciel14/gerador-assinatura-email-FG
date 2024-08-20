@@ -26,7 +26,7 @@ function generateSignature() {
 
     // Atualizar telefone
     if (whatsappChecked) {
-        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" target="_blank" style="text-decoration: none;" href="https://wa.me/+55${phone.replace(/[^0-9]/g, '')}">WhatsApp: ${phone} </a>`;
+        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" target="_blank" style="text-decoration: none; color: black;" href="https://wa.me/+55${phone.replace(/[^0-9]/g, '')}">WhatsApp: ${phone} </a>`;
     } else {
         document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" style="text-decoration: none; color: black;" href="tel:${phone.replace(/[^0-9]/g, '')}">${phone}</a> | <a class="whatsapp" style="text-decoration: none; color: black;" href="tel:${phone2.replace(/[^0-9]/g, '')}">${phone2}</a>`;
     }
@@ -136,12 +136,12 @@ function copySignature() {
 }
 
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID
+    apiKey: 'AIzaSyAh8u2-9hMt4zxiB-InJo7vwJBKJP5PwS8',
+    authDomain: 'fotos-assinatura.firebaseapp.com',
+    projectId: 'fotos-assinatura',
+    storageBucket: 'fotos-assinatura.appspot.com',
+    messagingSenderId: '76819168790',
+    appId: '1:76819168790:web:673533901af6720755ff37'
 };
 
 
