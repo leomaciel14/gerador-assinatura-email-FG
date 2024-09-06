@@ -156,3 +156,8 @@ input {
     border-radius: 50%;
     object-fit: cover;
 }
+
+a {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Herdar cor dos pais */
+}
