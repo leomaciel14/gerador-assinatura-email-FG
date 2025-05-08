@@ -17,95 +17,81 @@ function generateSignature() {
     const phone = whatsappChecked ? document.getElementById('phone').value : '11 4319-0315';
     const phone2 = '11 4319-0317';
     const photoFile = document.getElementById('photo').files[0];
-    const slackImageUrl = document.getElementById('slackImageUrl').value.trim();
     const noPhoto = document.getElementById('checkboxPhoto').checked;
 
-    // Atualizar nome e posição
     document.getElementById('previewName').textContent = name;
     document.getElementById('previewPosition').textContent = position;
 
     // Atualizar telefone
     if (whatsappChecked) {
-        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" target="_blank" style="text-decoration: none; color: black;" href="https://wa.me/+55${phone.replace(/[^0-9]/g, '')}">WhatsApp: ${phone} </a>`;
+        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" target="_blank" style="text-decoration: none; color: black;" href="https://wa.me/+55${phone.replace(/[^0-9]/g, '')}">WhatsApp: ${phone}</a>`;
     } else {
-        document.getElementById('previewPhone').innerHTML = `<a class="whatsapp" style="text-decoration: none; color: black;" href="tel:${phone.replace(/[^0-9]/g, '')}">${phone}</a> | <a class="whatsapp" style="text-decoration: none; color: black;" href="tel:${phone2.replace(/[^0-9]/g, '')}">${phone2}</a>`;
+        document.getElementById('previewPhone').innerHTML = `
+            <a style="text-decoration: none; color: black;" href="tel:${phone.replace(/[^0-9]/g, '')}">${phone}</a> | 
+            <a style="text-decoration: none; color: black;" href="tel:${phone2.replace(/[^0-9]/g, '')}">${phone2}</a>`;
     }
 
-    // Manipulação da foto
+    // Foto
     if (noPhoto) {
         document.getElementById('photoCell').style.display = 'none';
     } else {
         document.getElementById('photoCell').style.display = 'table-cell';
 
         if (photoFile) {
-            // Arquivo local
-            processImage(photoFile, function (processedImageDataUrl) {
-                uploadToFirebase(processedImageDataUrl, photoFile.name);
-            });
-        } else if (slackImageUrl) {
-            // Imagem externa do Slack
-            processImage(slackImageUrl, function (processedImageDataUrl) {
-                document.getElementById('avatar').src = processedImageDataUrl;
-            });
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                processImageUrl(e.target.result)
+                    .then(blob => uploadToFirebase(blob, photoFile.name))
+                    .catch(() => alert("Erro ao processar a imagem local"));
+            };
+            reader.readAsDataURL(photoFile);
         } else {
-            // Exibir avatar padrão
+            // Se não houver foto, colocar a imagem padrão
             document.getElementById('avatar').src = './Assets/Avatar-placeholder.png';
         }
     }
 }
 
-function processImage(source, callback) {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    const size = 150;
+function processImageUrl(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
 
-    img.crossOrigin = 'Anonymous';
+            const size = 256;
+            canvas.width = size;
+            canvas.height = size;
 
-    img.onload = function () {
-        canvas.width = size;
-        canvas.height = size;
+            const cropSize = Math.min(img.width, img.height);
+            const offsetX = (img.width - cropSize) / 2;
+            const offsetY = (img.height - cropSize) / 2;
 
-        ctx.clearRect(0, 0, size, size);
-        ctx.beginPath();
-        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, true);
-        ctx.closePath();
-        ctx.clip();
-        ctx.drawImage(img, 0, 0, size, size);
+            ctx.drawImage(img, offsetX, offsetY, cropSize, cropSize, 0, 0, size, size);
 
-        const dataUrl = canvas.toDataURL('image/png');
-        callback(dataUrl);
-    };
-
-    if (typeof source === 'string') {
-        img.src = source;
-    } else {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            img.src = e.target.result;
+            canvas.toBlob((blob) => {
+                if (blob) resolve(blob);
+                else reject("Erro ao gerar blob da imagem.");
+            }, 'image/png');
         };
-        reader.readAsDataURL(source);
-    }
+        img.onerror = () => reject("Erro ao carregar imagem.");
+        img.src = url;
+    });
 }
 
-function uploadToFirebase(dataUrl, fileName) {
+function uploadToFirebase(blob, fileName) {
     const storageRef = firebase.storage().ref(`imagens/${fileName}`);
-
-    fetch(dataUrl)
-        .then(res => res.blob())
-        .then(blob => {
-            return storageRef.put(blob);
-        })
+    storageRef.put(blob)
         .then(() => storageRef.getDownloadURL())
         .then(url => {
             document.getElementById('avatar').src = url;
-            console.log('URL da imagem: ', url);
+            console.log('Imagem salva: ', url);
         })
         .catch(error => {
-            console.error('Erro ao processar imagem para Firebase: ', error);
+            console.error("Erro ao fazer upload: ", error);
         });
 }
-
 
 function copySignature() {
     const signaturePreview = document.getElementById('signaturePreview');
@@ -144,7 +130,6 @@ const firebaseConfig = {
     messagingSenderId: '76819168790',
     appId: '1:76819168790:web:673533901af6720755ff37'
 };
-
 
 const app = firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
