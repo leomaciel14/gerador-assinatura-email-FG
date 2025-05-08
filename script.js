@@ -38,73 +38,74 @@ function generateSignature() {
         document.getElementById('photoCell').style.display = 'table-cell';
 
         if (photoFile) {
-            // Processar e carregar a imagem do arquivo local
+            // Arquivo local
             processImage(photoFile, function (processedImageDataUrl) {
-                const storageRef = firebase.storage().ref(`imagens/${photoFile.name}`);
-                
-                // Converter a imagem processada (data URL) para um arquivo Blob
-                fetch(processedImageDataUrl)
-                    .then(res => res.blob())
-                    .then(blob => {
-                        // Fazer o upload do Blob para o Firebase
-                        storageRef.put(blob).then(() => {
-                            // Obter a URL da imagem após o upload
-                            storageRef.getDownloadURL().then((url) => {
-                                document.getElementById('avatar').src = url;
-                                console.log('URL da imagem: ', url);
-                            }).catch((error) => {
-                                console.error("Erro ao obter a URL da imagem:", error);
-                            });
-                        }).catch((error) => {
-                            console.error("Erro ao fazer o upload da imagem:", error);
-                        });
-                    });
+                uploadToFirebase(processedImageDataUrl, photoFile.name);
             });
         } else if (slackImageUrl) {
-            // Carregar a imagem do Slack
-            document.getElementById('avatar').src = slackImageUrl;
+            // Imagem externa do Slack
+            processImage(slackImageUrl, function (processedImageDataUrl) {
+                document.getElementById('avatar').src = processedImageDataUrl;
+            });
         } else {
-            // Exibir avatar padrão se nenhuma imagem for selecionada
+            // Exibir avatar padrão
             document.getElementById('avatar').src = './Assets/Avatar-placeholder.png';
         }
     }
 }
 
-function processImage(file, callback) {
+function processImage(source, callback) {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const img = new Image();
+    const size = 150;
 
-    // Defina as dimensões desejadas para a imagem
-    const size = 150;  // Largura e altura da imagem
+    img.crossOrigin = 'Anonymous';
 
-    img.onload = function() {
-        // Configurando o tamanho do canvas
+    img.onload = function () {
         canvas.width = size;
         canvas.height = size;
 
-        // Desenhando o círculo de recorte
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, size, size);
         ctx.beginPath();
         ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-
-        // Desenhando a imagem no canvas com o clip aplicado
         ctx.drawImage(img, 0, 0, size, size);
 
-        // Convertendo o canvas para data URL (base64)
         const dataUrl = canvas.toDataURL('image/png');
         callback(dataUrl);
     };
 
-    // Lendo o arquivo como URL
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    if (typeof source === 'string') {
+        img.src = source;
+    } else {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(source);
+    }
 }
+
+function uploadToFirebase(dataUrl, fileName) {
+    const storageRef = firebase.storage().ref(`imagens/${fileName}`);
+
+    fetch(dataUrl)
+        .then(res => res.blob())
+        .then(blob => {
+            return storageRef.put(blob);
+        })
+        .then(() => storageRef.getDownloadURL())
+        .then(url => {
+            document.getElementById('avatar').src = url;
+            console.log('URL da imagem: ', url);
+        })
+        .catch(error => {
+            console.error('Erro ao processar imagem para Firebase: ', error);
+        });
+}
+
 
 function copySignature() {
     const signaturePreview = document.getElementById('signaturePreview');

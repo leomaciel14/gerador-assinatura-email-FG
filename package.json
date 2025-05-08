@@ -1,0 +1,15 @@
+{
+  "name": "gerador-assinatura-email-fg",
+  "version": "1.0.0",
+  "description": "Este é um projeto para gerar assinaturas de e-mail personalizadas para a FG. A aplicação permite inserir informações como nome, função, número de WhatsApp (opcional), e carregar uma foto para criar uma assinatura de e-mail profissional e consistente.",
+  "main": "generateEnv.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors-anywhere": "^0.4.4"
+  }
+}
